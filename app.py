@@ -115,9 +115,9 @@ def edit_todo_page(id):
 def admin_page():
   page = request.args.get('page', 1, type=int)
   q = request.args.get('q', default='', type=str)
-  todos = current_user.search_todos(q, page)
-  return render_template('admin.html', todos=todos, page=page, q=q)
-
+  done = request.args.get('done', default='any', type=str)
+  todos = current_user.search_todos(q, done, page)
+  return render_template('admin.html', todos=todos, q=q, page=page, done=done)
 
 # Action Routes
 @app.route('/signup', methods=['POST'])

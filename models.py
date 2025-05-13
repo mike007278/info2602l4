@@ -201,14 +201,31 @@ class Admin(User):
   def __repr__(self):
     return f'<Admin {self.id} : {self.username} - {self.email}>'
   
-  def search_todos(self, q, page): 
-    matching_todos = None
-  
-    if q!="" :
-      matching_todos = Todo.query.join(RegularUser).filter(
-        db.or_(RegularUser.username.ilike(f'%{q}%'), Todo.text.ilike(f'%{q}%'), Todo.id.ilike(f'%{q}%'))
-      )
-    else:
-      matching_todos = Todo.query
-      
-    return matching_todos.paginate(page=page, per_page=10)
+
+  # [any, true, false]
+  def search_todos(self, q, done, page): 
+      matching_todos = None
+    
+      if q!="" and done=="any" :
+        #search query and done is any - just do search
+        matching_todos = Todo.query.join(RegularUser).filter(
+          db.or_(RegularUser.username.ilike(f'%{q}%'), Todo.text.ilike(f'%{q}%'), Todo.id.ilike(f'%{q}%'))
+        )
+      elif q!="":
+        #search query and done is true or false - search then filter by done
+        is_done = True if done=="true" else False
+        matching_todos = Todo.query.join(RegularUser).filter(
+          db.or_(RegularUser.username.ilike(f'%{q}%'), Todo.text.ilike(f'%{q}%'), Todo.id.ilike(f'%{q}%')),
+          Todo.done == is_done
+        )
+      elif done != "any":
+        # done is true/false but no search query - filter by done only
+        is_done = True if done=="true" else False
+        matching_todos = Todo.query.filter_by(
+            done= is_done
+        )
+      else:
+        # done is any and no search query - all results
+        matching_todos = Todo.query
+        
+      return matching_todos.paginate(page=page, per_page=10)
