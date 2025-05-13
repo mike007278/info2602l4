@@ -229,3 +229,13 @@ class Admin(User):
         matching_todos = Todo.query
         
       return matching_todos.paginate(page=page, per_page=10)
+  
+  def get_todo_stats(self):
+    todos = Todo.query.all()
+    res = {}
+    for todo in todos:
+      if todo.user.username in res:
+        res[todo.user.username]+=1
+      else:
+        res[todo.user.username]=1
+    return res

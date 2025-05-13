@@ -119,6 +119,16 @@ def admin_page():
   todos = current_user.search_todos(q, done, page)
   return render_template('admin.html', todos=todos, q=q, page=page, done=done)
 
+@app.route('/todo-stats', methods=["GET"])
+@login_required(Admin)
+def todo_stats():
+  return jsonify(current_user.get_todo_stats())
+
+@app.route('/stats')
+@login_required(Admin)
+def stats_page():
+  return render_template('stats.html')
+
 # Action Routes
 @app.route('/signup', methods=['POST'])
 def signup_action():
