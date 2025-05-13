@@ -20,7 +20,7 @@
         <form  method="GET" action="/admin">
           <div class="row">
             <div class="col m10 input-field">
-              <input class="blue-text"  name="q" type="search" placeholder="Search">
+              <input class="blue-text" value="{{q}}" name="q" type="search" placeholder="Search">
             </div>
             <div class="col m2 input-field">
               <div class="row">
@@ -62,42 +62,42 @@
         </table>
 
         <!--- Table end -->    
-      <div class="row">
-
-        <ul class="pagination col s12 center">
-          {% if todos.prev_num %}
-          <li class="waves-effect">
-              <a href="{{ url_for('admin_page', page=todos.prev_num) }}"><i class="material-icons">chevron_left</i></a>
-          </li>
-          {% else %}
-          <li class="disabled">
-              <a href="#!"><i class="material-icons">chevron_left</i></a>
-          </li>
-          {% endif %}
-
-          {% for page_num in todos.iter_pages() %}
-              {% if page_num %}
-                  {% if todos.page == page_num %}
-                  <li class="active blue"><a href="#!">{{ page_num }}</a></li>
-                  {% else %}
-                  <li class="waves-effect"><a href="{{ url_for('admin_page', page=page_num) }}">{{ page_num }}</a></li>
-                  {% endif %}
-              {% else %}
-                  <li class="disabled"><a href="#!">...</a></li>
-              {% endif %}
-          {% endfor %}
-
-          {% if todos.has_next %}
-          <li class="waves-effect">
-              <a href="{{ url_for('admin_page', page=todos.next_num) }}"><i class="material-icons">chevron_right</i></a>
-          </li>
-          {% else %}
-          <li class="disabled">
-              <a href="#!"><i class="material-icons">chevron_right</i></a>
-          </li>
-          {% endif %}
-      </ul>
+        <div class="row">
         
+          <ul class="pagination col s12 center">
+              {% if todos.prev_num %}
+                <li class="waves-effect">
+                  <a href="{{ url_for('admin_page', page=todos.prev_num, q=q, done=done) }}"><i class="material-icons">chevron_left</i></a>
+              </li>
+              {% else %}
+                <li class="disabled">
+                  <a href="#!"><i class="material-icons">chevron_left</i></a>
+              </li>
+              {% endif %}
+          
+              {% for page_num in todos.iter_pages() %}
+                  {% if page_num %}
+                      {% if todos.page == page_num %}
+                        <li class="active blue"><a href="#!">{{ page_num }}</a></li>
+                      {% else %}
+                        <li class="waves-effect"><a href="{{ url_for('admin_page', page=page_num, q=q, done=done) }}">{{ page_num }}</a></li>
+                      {% endif %}
+                  {% else %}
+                      <li class="disabled"><a href="#!">...</a></li>
+                  {% endif %}
+              {% endfor %}
+          
+              {% if todos.has_next %}
+                <li class="waves-effect">
+                  <a href="{{ url_for('admin_page', page=todos.next_num, q=q, done=done) }}"><i class="material-icons">chevron_right</i></a>
+              </li>
+              {% else %}
+                <li class="disabled">
+                  <a href="#!"><i class="material-icons">chevron_right</i></a>
+              </li>
+              {% endif %}
+          </ul>
+          
       </div>
 
         

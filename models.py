@@ -201,6 +201,14 @@ class Admin(User):
   def __repr__(self):
     return f'<Admin {self.id} : {self.username} - {self.email}>'
   
-  def search_todos(self, page):
-    matching_todos = Todo.query
+  def search_todos(self, q, page): 
+    matching_todos = None
+  
+    if q!="" :
+      matching_todos = Todo.query.join(RegularUser).filter(
+        db.or_(RegularUser.username.ilike(f'%{q}%'), Todo.text.ilike(f'%{q}%'), Todo.id.ilike(f'%{q}%'))
+      )
+    else:
+      matching_todos = Todo.query
+      
     return matching_todos.paginate(page=page, per_page=10)

@@ -114,8 +114,9 @@ def edit_todo_page(id):
 @login_required(Admin)
 def admin_page():
   page = request.args.get('page', 1, type=int)
-  todos = current_user.search_todos(page)
-  return render_template('admin.html', todos=todos, page=page)
+  q = request.args.get('q', default='', type=str)
+  todos = current_user.search_todos(q, page)
+  return render_template('admin.html', todos=todos, page=page, q=q)
 
 
 # Action Routes
